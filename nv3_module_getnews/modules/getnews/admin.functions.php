@@ -9,10 +9,10 @@
 
 if ( ! defined( 'NV_ADMIN' ) or ! defined( 'NV_MAINFILE' ) or ! defined( 'NV_IS_MODADMIN' ) ) die( 'Stop!!!' );
 
-//$submenu['main'] = $lang_module['main'];
+$submenu['main'] = $lang_module['main'];
+$submenu['add_news'] = $lang_module['addnews'];
 $submenu['config'] = $lang_module['config'];
-//$submenu['saveconfig'] = $lang_module['savepath'];
-$allow_func = array( 'main', 'config','getcontent','saveconfig');
+$allow_func = array( 'main', 'config','getcontent','saveconfig','getarea','add_news');
 
 define( 'NV_IS_FILE_ADMIN', true );
 

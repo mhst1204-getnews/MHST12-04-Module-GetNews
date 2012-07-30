@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 /**
  * @author CUONG
@@ -126,7 +126,10 @@ class GetContent
                     $i=$i+1;array_pop($head);//Loại bỏ vị trí cuối cùng đang có trong mảng head.
                     $head[]=$i;//Lưu vị trí của đã tìm được vào mảng head.
                     //Khi mà vị trí tìm được vẫn còn node con thì gọi tới hàm A để tìm tới node con thỏa mãn dk hơn.
-                    $head=GetContent::A($nextnode,$head,$check);
+                    if($nextnode->tag!="table")
+                    {
+                        $head=GetContent::A($nextnode,$head,$check);
+                    }
                     $check=true;//Gán hàm check bằng true và kết thúc vòng lặp.
                     break;
                 }
@@ -325,7 +328,7 @@ class GetContent
                 if($max<=$temp)
                 {
                     $max=$temp;
-                    $vitri=$i-1;
+                    $vitri=$i;
                     break;
                 }
             }
@@ -349,5 +352,93 @@ class GetContent
         //print_r($temp);
         return count($temp);
     }
+}
+
+class GetArea
+{
+    static function GetContent($link)
+    {
+        $html=file_get_html($link);
+        $a=$html->find("body",0);
+        $pos=array();
+        $chose=array();
+        $b=$a;
+        $kq=array();
+        while(count($a->childNodes())>0)
+        {
+            $nub=GetContent::FindArea($a,$chose);
+            $pos[]=$nub;
+            $a=$a->children($nub);
+        }
+        
+        $asdf=GetContent::FindAreaConfig($chose,$pos);
+        foreach($pos as $p)
+        {
+            $b=$b->children($p);
+        }
+        
+        $tag=array("input","ul","script","font","a","label");
+        foreach($tag as $t)
+        {
+            $node=$b->find($t);
+            foreach($node as $no)
+            {
+                $no->outertext='';
+            }
+        }
+        
+        GetArea::RemoveNode($b,$pos);
+        $kq['noidung']=$b->outertext();
+        $xpath="";
+        foreach($pos as $posi)
+        {
+            $xpath.=$posi."/";
+        }
+        $kq['xpath']=$xpath;
+        return $kq;
+     }   
+        
+     static function RemoveNode(&$b,&$pos)
+     {
+        $tag=array("h1","h2","p");
+        foreach($tag as $t)
+        {
+            $find=$b->find($t,0);
+            if(!is_null($find))
+            {
+                $totalWord=GetContent::CountTotalWord($find->plaintext);
+                $kq=0;
+                GetArea::C($find,$totalWord,$kq);
+                for($i=0;$i<$kq;$i++)
+                {
+                    $b=$find->parent();
+                    array_pop($pos);
+                }
+                break;
+            }
+        }
+     }
+     
+     static function C($node,$totalword,&$kq)
+     {
+        $child=$node->parent()->childNodes;
+        $count=0;
+        if(count($child)>0)
+        {
+            for($i=0;$i<count($child);$i++)
+            {
+                $nextNode=$node->nextSibling();
+                $count.=GetContent::CountTotalWord($nextNode->plaintext);
+            }
+        }
+        if($count<$totalword)
+        {
+            GetArea::C($node->parent(),$totalword,$kq);
+        }
+        else
+        {
+            $kq=1;
+        }
+     } 
 }
 ?>

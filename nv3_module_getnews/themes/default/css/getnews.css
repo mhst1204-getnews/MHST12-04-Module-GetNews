@@ -4,3 +4,6 @@
  * @Copyright (C) 2010 VINADES.,JSC. All rights reserved
  * @Createdate Mon, 23 Jul 2012 02:56:18 GMT
  */
+ .outline-element {
+    outline: 1px solid #CC0000;
+}

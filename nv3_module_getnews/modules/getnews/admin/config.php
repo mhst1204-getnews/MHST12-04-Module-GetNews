@@ -9,6 +9,7 @@
 
 if ( ! defined( 'NV_IS_FILE_ADMIN' ) ) die( 'Stop!!!' );
 if(defined('NV_EDITOR')){require_once(NV_ROOTDIR.'/'.NV_EDITORSDIR.'/'.NV_EDITOR.'/nv.php');}
+
 $xtpl = new XTemplate( $op . ".tpl", NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file );
 $xtpl->assign( 'LANG', $lang_module );
 $xtpl->assign( 'NV_BASE_ADMINURL', NV_BASE_ADMINURL );
@@ -30,8 +31,6 @@ $xtpl->parse( 'main' );
 
 $page_title = $lang_module['config'];
 $contents=$xtpl->text('main');
-$contents.="<script type=\"text/javascript\" src=\"".NV_BASE_SITEURL."js/language/jquery.min.js\"></script>";
-
 //$contents.=NV_BASE_SITEURL.$module_name."/admin/getcontent.php";
 include ( NV_ROOTDIR . "/includes/header.php" );
 echo nv_admin_theme( $contents );
